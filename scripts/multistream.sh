@@ -62,7 +62,15 @@ cmd_restart() {
 
 cmd_deploy() {
     echo "Deploying configs to server..."
-    scp "$SCRIPT_DIR/../config/docker-compose.yml" "root@$SERVER_IP:/opt/multistream/docker-compose.yml"
+
+    # Build docker-compose.yml with real keys
+    TEMP_COMPOSE=$(mktemp)
+    sed "s|TWITCH_STREAM_KEY|$TWITCH_STREAM_KEY|g" "$SCRIPT_DIR/../config/docker-compose.yml" \
+        | sed "s|KICK_STREAM_KEY|$KICK_STREAM_KEY|g" \
+        > "$TEMP_COMPOSE"
+    scp "$TEMP_COMPOSE" "root@$SERVER_IP:/opt/multistream/docker-compose.yml"
+    rm "$TEMP_COMPOSE"
+
     scp "$SCRIPT_DIR/../config/kick-stunnel.conf" "root@$SERVER_IP:/etc/stunnel/kick.conf"
 
     # Build srs.conf with real keys from .env
@@ -70,11 +78,6 @@ cmd_deploy() {
     sed "s|TWITCH_STREAM_KEY|$TWITCH_STREAM_KEY|g" "$SCRIPT_DIR/../config/srs.conf" \
         | sed "s|KICK_STREAM_KEY|$KICK_STREAM_KEY|g" \
         > "$TEMP_CONF"
-
-    if [ -n "$YOUTUBE_STREAM_KEY" ]; then
-        sed -i "s|# destination     rtmp://a.rtmp.youtube.com/live2/YOUTUBE_STREAM_KEY;|destination     rtmp://a.rtmp.youtube.com/live2/$YOUTUBE_STREAM_KEY;|g" "$TEMP_CONF"
-    fi
-
     scp "$TEMP_CONF" "root@$SERVER_IP:/opt/multistream/conf/srs.conf"
     rm "$TEMP_CONF"
 

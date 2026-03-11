@@ -9,8 +9,35 @@ services:
       - "1935:1935"   # RTMP ingest
       - "8080:8080"   # HTTP server (HLS, HTTP-FLV, API console)
       - "1985:1985"   # HTTP API
+    command: ./objs/srs -c conf/srs.conf
     volumes:
       - ./conf/srs.conf:/usr/local/srs/conf/srs.conf:ro
       - ./logs:/usr/local/srs/objs/logs
     environment:
       - TZ=America/Vancouver
+
+  forward-twitch:
+    image: jrottenberg/ffmpeg:4.4-alpine
+    container_name: multistream-twitch
+    restart: unless-stopped
+    depends_on:
+      - srs
+    network_mode: host
+    command: >
+      -hide_banner -loglevel warning
+      -i rtmp://127.0.0.1:1935/live/livestream
+      -c copy -f flv
+      rtmp://live.twitch.tv/app/TWITCH_STREAM_KEY
+
+  forward-kick:
+    image: jrottenberg/ffmpeg:4.4-alpine
+    container_name: multistream-kick
+    restart: unless-stopped
+    depends_on:
+      - srs
+    network_mode: host
+    command: >
+      -hide_banner -loglevel warning
+      -i rtmp://127.0.0.1:1935/live/livestream
+      -c copy -f flv
+      rtmp://127.0.0.1:1936/app/KICK_STREAM_KEY

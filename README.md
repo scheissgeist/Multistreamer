@@ -90,8 +90,8 @@ Web console: http://5.78.187.172:8080
 
 ```
 config/
-  srs.conf              # SRS config (keys templated, filled from .env on deploy)
-  docker-compose.yml     # Docker setup
+  srs.conf              # SRS config (ingest + HLS only)
+  docker-compose.yml     # Docker setup (SRS + ffmpeg forwarders, keys filled from .env on deploy)
   kick-stunnel.conf      # Stunnel TLS config for Kick
 scripts/
   multistream.sh         # Management CLI (status, deploy, golive, title, game)
@@ -115,7 +115,8 @@ docs/
 
 ## Tech Stack
 
-- **SRS 5** (Docker) - RTMP ingest and forwarding
+- **SRS 5** (Docker) - RTMP ingest + HLS
+- **ffmpeg** (Docker) - Stream forwarding to Twitch and Kick
 - **Stunnel** - TLS wrapper for Kick RTMPS
 - **vnstat** - Bandwidth tracking
 - **UFW** - Firewall

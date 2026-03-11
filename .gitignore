@@ -1,3 +1,4 @@
 .env
 *.env
 logs/
+.hoff_status.json
