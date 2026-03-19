@@ -21,7 +21,7 @@ Platforms that require TLS (like Kick) go through Stunnel on the server.
 
 - A VPS with Docker (tested on Hetzner CPX11 — 2 vCPU, 4GB RAM, ~$5.59/month)
 - Stream keys from Twitch and Kick
-- Python 3 (for API commands)
+- Python 3 + pip (for web dashboard and API commands)
 - Stunnel (for Kick RTMPS)
 
 ## Setup
@@ -93,7 +93,28 @@ bash scripts/auth-setup.sh kick     # Kick only
 
 Tokens are saved to `.env` and auto-refresh on expiry.
 
-## Commands
+## Web Dashboard
+
+A local web UI for managing everything without touching the terminal.
+
+```bash
+pip install -r requirements.txt
+python web/server.py
+```
+
+Open `http://localhost:3000`. From there you can:
+
+- See server status, container health, and active streams
+- Deploy configs to your server
+- Set stream title and game on Twitch + Kick
+- View SRS logs
+- Restart services
+
+The dashboard runs locally — nothing is exposed to the internet.
+
+## CLI Commands
+
+Everything the dashboard does is also available from the command line:
 
 ```bash
 # Server management
@@ -118,14 +139,19 @@ bash scripts/monitor.sh
 ## Project Structure
 
 ```
+web/
+  server.py              # Dashboard backend (Flask, localhost:3000)
+  templates/
+    dashboard.html       # Dashboard UI
 config/
   docker-compose.yml     # SRS + 2x ffmpeg forwarders (keys templated from .env)
   srs.conf               # SRS ingest config
   kick-stunnel.conf      # Stunnel TLS config for Kick RTMPS
 scripts/
-  multistream.sh         # Main CLI
+  multistream.sh         # CLI (same features as dashboard)
   auth-setup.sh          # One-time OAuth setup for Twitch + Kick
   monitor.sh             # Health monitor with auto-restart
+requirements.txt         # Python dependencies (Flask)
 .env.example             # Template
 ```
 
@@ -183,7 +209,8 @@ ffmpeg with `-c copy` (no re-encoding) uses almost no CPU. Each destination just
 - **SRS 5** — RTMP ingest server (Docker)
 - **ffmpeg** — Stream forwarding (Docker, one container per platform)
 - **Stunnel** — TLS wrapper for Kick's RTMPS requirement
-- **Bash** — CLI management scripts
+- **Flask** — Local web dashboard (no build step, no node_modules)
+- **Bash** — CLI (same features as dashboard)
 - **Twitch Helix API** / **Kick Public API** — Stream metadata
 
 ## Why Not Restream?
