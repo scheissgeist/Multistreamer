@@ -1,4 +1,5 @@
 .env
 *.env
+!.env.example
 logs/
 .hoff_status.json
