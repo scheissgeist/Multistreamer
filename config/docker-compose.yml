@@ -41,3 +41,17 @@ services:
       -i rtmp://127.0.0.1:1935/live/livestream
       -c copy -f flv
       rtmp://127.0.0.1:1936/app/KICK_STREAM_KEY
+
+  # Uncomment to stream to X (requires X Premium, RTMP URL from Media Studio)
+  # forward-x:
+  #   image: jrottenberg/ffmpeg:4.4-alpine
+  #   container_name: multistream-x
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - srs
+  #   network_mode: host
+  #   command: >
+  #     -hide_banner -loglevel warning
+  #     -i rtmp://127.0.0.1:1935/live/livestream
+  #     -c copy -f flv
+  #     X_RTMP_URL/X_STREAM_KEY

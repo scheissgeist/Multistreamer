@@ -251,6 +251,8 @@ def api_deploy():
     compose_src = (config_dir / "docker-compose.yml").read_text()
     compose_src = compose_src.replace("TWITCH_STREAM_KEY", twitch_key)
     compose_src = compose_src.replace("KICK_STREAM_KEY", kick_key)
+    compose_src = compose_src.replace("X_RTMP_URL", env.get("X_RTMP_URL", "X_RTMP_URL"))
+    compose_src = compose_src.replace("X_STREAM_KEY", env.get("X_STREAM_KEY", "X_STREAM_KEY"))
 
     import tempfile
     errors = []
@@ -295,7 +297,9 @@ def api_golive():
     if not title and not game:
         return jsonify({"ok": False, "error": "Provide title, game, or both"})
 
-    results = {"twitch": None, "kick": None}
+    # Which platforms to update (default: all configured)
+    platforms = body.get("platforms", ["twitch", "kick"])
+    results = {}
 
     # Lookup game IDs
     twitch_game_id = None
@@ -304,48 +308,50 @@ def api_golive():
     if game:
         encoded = urllib.parse.quote(game)
 
-        # Twitch game lookup
-        tr = twitch_api("GET", f"https://api.twitch.tv/helix/search/categories?query={encoded}")
-        if tr["ok"] and tr["data"]:
-            cats = tr["data"].get("data", [])
-            for c in cats:
-                if c["name"].lower() == game.lower():
-                    twitch_game_id = c["id"]
-                    break
-            if not twitch_game_id and cats:
-                twitch_game_id = cats[0]["id"]
+        if "twitch" in platforms:
+            tr = twitch_api("GET", f"https://api.twitch.tv/helix/search/categories?query={encoded}")
+            if tr["ok"] and tr["data"]:
+                cats = tr["data"].get("data", [])
+                for c in cats:
+                    if c["name"].lower() == game.lower():
+                        twitch_game_id = c["id"]
+                        break
+                if not twitch_game_id and cats:
+                    twitch_game_id = cats[0]["id"]
 
-        # Kick category lookup
-        kr = kick_api("GET", f"https://api.kick.com/public/v1/categories?q={encoded}")
-        if kr["ok"] and kr["data"]:
-            cats = kr["data"].get("data", [])
-            for c in cats:
-                if c["name"].lower() == game.lower():
-                    kick_category_id = c["id"]
-                    break
-            if not kick_category_id and cats:
-                kick_category_id = cats[0]["id"]
+        if "kick" in platforms:
+            kr = kick_api("GET", f"https://api.kick.com/public/v1/categories?q={encoded}")
+            if kr["ok"] and kr["data"]:
+                cats = kr["data"].get("data", [])
+                for c in cats:
+                    if c["name"].lower() == game.lower():
+                        kick_category_id = c["id"]
+                        break
+                if not kick_category_id and cats:
+                    kick_category_id = cats[0]["id"]
 
     # Set Twitch
-    twitch_body = {}
-    if title:
-        twitch_body["title"] = title
-    if twitch_game_id:
-        twitch_body["game_id"] = str(twitch_game_id)
-    if twitch_body:
-        broadcaster_id = env.get("TWITCH_BROADCASTER_ID", "")
-        tr = twitch_api("PATCH", f"https://api.twitch.tv/helix/channels?broadcaster_id={broadcaster_id}", twitch_body)
-        results["twitch"] = "updated" if tr["ok"] else "failed"
+    if "twitch" in platforms:
+        twitch_body = {}
+        if title:
+            twitch_body["title"] = title
+        if twitch_game_id:
+            twitch_body["game_id"] = str(twitch_game_id)
+        if twitch_body:
+            broadcaster_id = env.get("TWITCH_BROADCASTER_ID", "")
+            tr = twitch_api("PATCH", f"https://api.twitch.tv/helix/channels?broadcaster_id={broadcaster_id}", twitch_body)
+            results["twitch"] = "updated" if tr["ok"] else "failed"
 
     # Set Kick
-    kick_body = {}
-    if title:
-        kick_body["stream_title"] = title
-    if kick_category_id:
-        kick_body["category_id"] = kick_category_id
-    if kick_body:
-        kr = kick_api("PATCH", "https://api.kick.com/public/v1/channels", kick_body)
-        results["kick"] = "updated" if kr["ok"] else "failed"
+    if "kick" in platforms:
+        kick_body = {}
+        if title:
+            kick_body["stream_title"] = title
+        if kick_category_id:
+            kick_body["category_id"] = kick_category_id
+        if kick_body:
+            kr = kick_api("PATCH", "https://api.kick.com/public/v1/channels", kick_body)
+            results["kick"] = "updated" if kr["ok"] else "failed"
 
     return jsonify({"ok": True, "results": results, "game_ids": {
         "twitch": twitch_game_id,
@@ -387,6 +393,7 @@ def api_config():
         "server_ip": env.get("SERVER_IP", ""),
         "has_twitch_key": bool(env.get("TWITCH_STREAM_KEY")),
         "has_kick_key": bool(env.get("KICK_STREAM_KEY")),
+        "has_x_key": bool(env.get("X_STREAM_KEY")),
         "has_twitch_api": has_twitch_api,
         "has_kick_api": has_kick_api,
     })

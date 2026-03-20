@@ -215,13 +215,14 @@ ffmpeg with `-c copy` (no re-encoding) uses almost no CPU. Each destination just
 
 ## Why Not Restream?
 
-Restream's free tier gives you 2 destinations, which is fine if that's all you need. But:
+**Be honest:** If you only stream to Twitch + Kick, Restream's free tier does that. Use it. It's easier to set up than this.
 
-- Their paid plans ($16-39/month) kick in fast once you want more platforms, 1080p, or no watermark
-- Your stream routes through their servers — they can see it, throttle it, or go down mid-stream
-- They control which platforms you can use
+This tool makes sense when:
 
-This gives you unlimited destinations for a flat ~$5/month VPS cost, full control, and no middleman. The tradeoff is you set it up yourself.
+- **3+ destinations** — Restream free caps at 2. Their paid tier is $16/mo. This is ~$5/mo for unlimited.
+- **You don't want a middleman** — Your stream routes through Restream's servers. They can see it, throttle it, add watermarks, or go down mid-stream. This is your server, your stream.
+- **You want CLI/API control** — Set titles and categories from a script, a cron job, or your own tools. Restream's API is limited and paywalled.
+- **Platform independence** — Restream decides which platforms to support. This works with anything that accepts RTMP.
 
 ## License
 

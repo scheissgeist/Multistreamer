@@ -88,7 +88,7 @@ cmd_deploy() {
 
     # Substitute stream keys into docker-compose.yml
     local temp=$(mktemp)
-    sed "s|TWITCH_STREAM_KEY|$TWITCH_STREAM_KEY|g; s|KICK_STREAM_KEY|$KICK_STREAM_KEY|g" \
+    sed "s|TWITCH_STREAM_KEY|$TWITCH_STREAM_KEY|g; s|KICK_STREAM_KEY|$KICK_STREAM_KEY|g; s|X_RTMP_URL|${X_RTMP_URL:-X_RTMP_URL}|g; s|X_STREAM_KEY|${X_STREAM_KEY:-X_STREAM_KEY}|g" \
         "$SCRIPT_DIR/../config/docker-compose.yml" > "$temp"
     scp "$temp" "root@$SERVER_IP:/opt/multistream/docker-compose.yml"
     rm "$temp"
