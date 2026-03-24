@@ -14,7 +14,7 @@ services:
       - ./conf/srs.conf:/usr/local/srs/conf/srs.conf:ro
       - ./logs:/usr/local/srs/objs/logs
     environment:
-      - TZ=America/Vancouver
+      - TZ=UTC
 
   forward-twitch:
     image: jrottenberg/ffmpeg:4.4-alpine
@@ -41,6 +41,20 @@ services:
       -i rtmp://127.0.0.1:1935/live/livestream
       -c copy -f flv
       rtmp://127.0.0.1:1936/app/KICK_STREAM_KEY
+
+  # Uncomment to stream to Rumble
+  # forward-rumble:
+  #   image: jrottenberg/ffmpeg:4.4-alpine
+  #   container_name: multistream-rumble
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - srs
+  #   network_mode: host
+  #   command: >
+  #     -hide_banner -loglevel warning
+  #     -i rtmp://127.0.0.1:1935/live/livestream
+  #     -c copy -f flv
+  #     RUMBLE_RTMP_URL/RUMBLE_STREAM_KEY
 
   # Uncomment to stream to X (requires X Premium, RTMP URL from Media Studio)
   # forward-x:

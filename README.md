@@ -17,26 +17,30 @@ OBS sends one RTMP stream to your server. SRS receives it. Each platform gets it
 
 Platforms that require TLS (like Kick) go through Stunnel on the server.
 
+## Quick Start
+
+**Never used a terminal before?** Follow the [step-by-step setup guide](docs/SETUP_GUIDE.md) — it walks through everything from scratch, no experience needed.
+
+**Know your way around a server?** Keep reading.
+
 ## Requirements
 
 - A VPS with Docker (tested on Hetzner CPX11 — 2 vCPU, 4GB RAM, ~$5.59/month)
 - Stream keys from Twitch and Kick
-- Python 3 + pip (for web dashboard and API commands)
+- Python 3 + pip (for web dashboard)
 - Stunnel (for Kick RTMPS)
 
 ## Setup
 
 ### 1. Server
 
-SSH into your VPS and install Docker, then set up stunnel:
+SSH into your VPS and run the setup script:
 
 ```bash
-# Install stunnel
-apt install stunnel4 -y
-systemctl enable stunnel4
+bash setup-server.sh
 ```
 
-Copy `config/kick-stunnel.conf` to `/etc/stunnel/kick.conf` on your server. Edit the `connect` line to point to your Kick RTMP ingest server.
+This installs Docker, Stunnel, creates the directory structure, and configures the firewall. Safe to run multiple times.
 
 ### 2. Configure
 

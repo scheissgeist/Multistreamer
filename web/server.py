@@ -253,6 +253,8 @@ def api_deploy():
     compose_src = compose_src.replace("KICK_STREAM_KEY", kick_key)
     compose_src = compose_src.replace("X_RTMP_URL", env.get("X_RTMP_URL", "X_RTMP_URL"))
     compose_src = compose_src.replace("X_STREAM_KEY", env.get("X_STREAM_KEY", "X_STREAM_KEY"))
+    compose_src = compose_src.replace("RUMBLE_RTMP_URL", env.get("RUMBLE_RTMP_URL", "RUMBLE_RTMP_URL"))
+    compose_src = compose_src.replace("RUMBLE_STREAM_KEY", env.get("RUMBLE_STREAM_KEY", "RUMBLE_STREAM_KEY"))
 
     import tempfile
     errors = []
@@ -383,6 +385,32 @@ def api_golive_inner(title="", game=""):
         return api_golive()
 
 
+@app.route("/api/save-env", methods=["POST"])
+def api_save_env():
+    """Save a key-value pair to .env from the dashboard."""
+    body = request.json or {}
+    key = body.get("key", "").strip()
+    value = body.get("value", "").strip()
+
+    # Only allow specific keys to be saved
+    allowed = {
+        "SERVER_IP",
+        "TWITCH_STREAM_KEY", "KICK_STREAM_KEY",
+        "X_RTMP_URL", "X_STREAM_KEY",
+        "RUMBLE_RTMP_URL", "RUMBLE_STREAM_KEY",
+        "YOUTUBE_STREAM_KEY",
+        "TWITCH_CLIENT_ID", "TWITCH_CLIENT_SECRET", "TWITCH_BROADCASTER_ID",
+        "KICK_CLIENT_ID", "KICK_CLIENT_SECRET",
+    }
+    if key not in allowed:
+        return jsonify({"ok": False, "error": f"Key '{key}' not allowed"})
+    if not value:
+        return jsonify({"ok": False, "error": "Value cannot be empty"})
+
+    save_env_value(key, value)
+    return jsonify({"ok": True})
+
+
 @app.route("/api/config")
 def api_config():
     """Return non-secret config info for the dashboard."""
@@ -393,6 +421,7 @@ def api_config():
         "server_ip": env.get("SERVER_IP", ""),
         "has_twitch_key": bool(env.get("TWITCH_STREAM_KEY")),
         "has_kick_key": bool(env.get("KICK_STREAM_KEY")),
+        "has_rumble_key": bool(env.get("RUMBLE_STREAM_KEY")),
         "has_x_key": bool(env.get("X_STREAM_KEY")),
         "has_twitch_api": has_twitch_api,
         "has_kick_api": has_kick_api,
@@ -402,4 +431,6 @@ def api_config():
 if __name__ == "__main__":
     load_env()
     print("Multistreamer Dashboard: http://localhost:3000")
+    app.jinja_env.auto_reload = True
+    app.config["TEMPLATES_AUTO_RELOAD"] = True
     app.run(host="127.0.0.1", port=3000, debug=False)

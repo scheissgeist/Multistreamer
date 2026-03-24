@@ -16,14 +16,14 @@ body {
 }
 
 .wrap {
-    max-width: 520px;
-    margin: 60px auto;
+    max-width: 600px;
+    margin: 40px auto;
     padding: 0 24px;
 }
 
 /* Header */
 .header {
-    margin-bottom: 32px;
+    margin-bottom: 28px;
 }
 
 .header h1 {
@@ -32,78 +32,196 @@ body {
     color: #1a1816;
 }
 
-.header p {
+.header .sub {
     font-size: 13px;
-    color: #8a847c;
+    color: #a09a92;
     margin-top: 2px;
-    font-family: 'SF Mono', Menlo, Consolas, monospace;
 }
 
-/* Platforms row */
-.platforms {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-}
-
-.platform {
-    display: flex;
+/* Live banner */
+.live-banner {
+    display: none;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #fff;
-    border: 1px solid #e5e1dc;
-    border-radius: 3px;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #eaf7ed;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-bottom: 20px;
     font-size: 13px;
-    color: #4a453e;
+    font-weight: 500;
+    color: #1e6e32;
 }
-
-.platform .dot {
-    width: 6px;
-    height: 6px;
+.live-banner.active { display: flex; }
+.live-dot {
+    width: 8px; height: 8px;
     border-radius: 50%;
-    flex-shrink: 0;
+    background: #2da44e;
+    animation: pulse 2s infinite;
 }
-
-.dot-on { background: #3d9a50; }
-.dot-off { background: #c4bfb8; }
-.dot-live { background: #3d9a50; animation: pulse 2s infinite; }
-
 @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+    50% { opacity: 0.35; }
 }
 
-/* Stream info form */
-.stream-form {
-    margin-bottom: 28px;
+/* OBS box */
+.obs-box {
+    background: #fff;
+    border: 1px solid #e5e1dc;
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
 }
 
-.field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+.obs-box .label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a1816;
+    margin-bottom: 8px;
+}
+
+.obs-row {
+    display: flex;
+    align-items: center;
     gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+.obs-row:last-child { margin-bottom: 0; }
+
+.obs-k {
+    color: #a09a92;
+    width: 50px;
+    flex-shrink: 0;
+    font-size: 12px;
+}
+
+.obs-v {
+    flex: 1;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #4a453e;
+    background: #f5f3f0;
+    padding: 5px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.1s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.obs-v:hover { background: #ece8e3; }
+
+/* Platform card */
+.platform {
+    background: #fff;
+    border: 1px solid #e5e1dc;
+    border-radius: 4px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+}
+
+.platform.live {
+    border-color: #c3e6cb;
+    background: #fcfefc;
+}
+
+.p-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
 }
 
-input[type="text"] {
-    width: 100%;
-    padding: 9px 11px;
-    border: 1px solid #ddd9d3;
+.p-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1816;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.p-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+}
+.p-dot.on { background: #2da44e; }
+.p-dot.off { background: #c4bfb8; }
+.p-dot.live { background: #2da44e; animation: pulse 2s infinite; }
+
+.p-badge {
+    font-size: 11px;
+    padding: 2px 8px;
     border-radius: 3px;
-    font-size: 14px;
-    font-family: inherit;
+    font-weight: 500;
+}
+.p-badge.streaming { background: #eaf7ed; color: #1e6e32; }
+.p-badge.ready { background: #f0ece8; color: #6b655e; }
+.p-badge.offline { background: #fdf0ef; color: #c4423a; }
+.p-badge.unconfigured { background: #f5f3f0; color: #a09a92; }
+
+/* Platform fields */
+.p-fields {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 10px;
+    align-items: center;
+    font-size: 13px;
+}
+
+.p-label {
+    font-size: 12px;
+    color: #a09a92;
+}
+
+.p-input {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #e5e1dc;
+    border-radius: 3px;
+    font-size: 13px;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
     color: #2d2a26;
-    background: #fff;
+    background: #fafaf8;
     outline: none;
     transition: border-color 0.15s;
 }
+.p-input:focus { border-color: #a09a92; }
+.p-input::placeholder { color: #c4bfb8; }
+.p-input.saved { border-color: #c3e6cb; }
 
-input:focus { border-color: #a09a92; }
-input::placeholder { color: #c4bfb8; }
+.p-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+}
 
-.target-row {
+/* Stream info section */
+.stream-section {
+    background: #fff;
+    border: 1px solid #e5e1dc;
+    border-radius: 4px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+}
+
+.s-head {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1816;
+    margin-bottom: 10px;
+}
+
+.s-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.s-targets {
     display: flex;
     gap: 14px;
     margin-bottom: 10px;
@@ -111,34 +229,50 @@ input::placeholder { color: #c4bfb8; }
     color: #6b655e;
 }
 
-.target-row label {
+.s-targets label {
     display: flex;
     align-items: center;
     gap: 5px;
     cursor: pointer;
 }
 
-.target-row input[type="checkbox"] {
+.s-targets input[type="checkbox"] {
     accent-color: #2d2a26;
 }
+
+/* Inputs & buttons */
+input[type="text"] {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid #ddd9d3;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #2d2a26;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+}
+input[type="text"]:focus { border-color: #a09a92; }
+input[type="text"]::placeholder { color: #c4bfb8; }
 
 .btns { display: flex; gap: 6px; flex-wrap: wrap; }
 
 button {
-    padding: 8px 16px;
+    padding: 7px 14px;
     font-size: 13px;
     font-family: inherit;
     font-weight: 500;
     border: 1px solid #ddd9d3;
-    border-radius: 3px;
+    border-radius: 4px;
     background: #fff;
     color: #4a453e;
     cursor: pointer;
     transition: background 0.1s, border-color 0.1s;
 }
-
 button:hover { background: #f0ece8; border-color: #c4bfb8; }
 button:active { background: #e8e4df; }
+button:disabled { opacity: 0.35; cursor: not-allowed; }
 
 button.primary {
     background: #2d2a26;
@@ -147,47 +281,60 @@ button.primary {
 }
 button.primary:hover { background: #3d3a36; }
 
-/* Feedback line */
+button.sm {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
 .feedback {
     margin-top: 8px;
     font-size: 13px;
-    min-height: 20px;
+    min-height: 18px;
     color: #8a847c;
 }
-
-.feedback .ok { color: #3d9a50; }
+.feedback .ok { color: #2da44e; }
 .feedback .fail { color: #c4423a; }
 
 /* Divider */
 hr {
     border: none;
     border-top: 1px solid #e5e1dc;
-    margin: 24px 0;
+    margin: 16px 0;
 }
 
-/* Server section */
-.server-btns {
+/* Advanced */
+.adv-toggle {
+    font-size: 12px;
+    color: #a09a92;
+    cursor: pointer;
+    margin-bottom: 8px;
+    user-select: none;
+}
+.adv-toggle:hover { color: #6b655e; }
+
+.adv-panel { display: none; }
+.adv-panel.open { display: block; }
+
+.adv-btns {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
     margin-bottom: 10px;
 }
 
-/* Logs */
 .log-box {
     background: #fff;
     border: 1px solid #e5e1dc;
-    border-radius: 3px;
+    border-radius: 4px;
     padding: 10px 12px;
     font-family: 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
     line-height: 1.6;
-    max-height: 240px;
+    max-height: 200px;
     overflow-y: auto;
     color: #6b655e;
     white-space: pre-wrap;
     word-break: break-all;
-    margin-top: 10px;
 }
 
 /* Toast */
@@ -199,44 +346,201 @@ hr {
     padding: 8px 18px;
     background: #2d2a26;
     color: #f5f3f0;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 13px;
+    z-index: 100;
     animation: slideup 0.15s ease;
 }
-
 @keyframes slideup {
     from { opacity: 0; transform: translateX(-50%) translateY(4px); }
     to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* Platforms that are configured but not connected */
-.platform.unconfigured {
-    opacity: 0.5;
-    border-style: dashed;
+.warn-bar {
+    padding: 8px 14px;
+    background: #fdf0ef;
+    border: 1px solid #f0d0cd;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #9a3a32;
 }
 
 @media (max-width: 500px) {
-    .field-row { grid-template-columns: 1fr; }
-    .wrap { margin: 24px auto; }
+    .s-fields { grid-template-columns: 1fr; }
+    .wrap { margin: 20px auto; }
+    .p-fields { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-    <div class="header">
-        <h1>Multistreamer</h1>
-        <p id="obs-url"></p>
+    <!-- Live banner -->
+    <div id="live-banner" class="live-banner">
+        <span class="live-dot"></span>
+        <span id="live-text">You're live</span>
     </div>
 
-    <div id="platforms" class="platforms"></div>
+    <!-- Header -->
+    <div class="header">
+        <h1>Multistreamer</h1>
+        <div class="sub">Stream to multiple platforms from one OBS output</div>
+    </div>
 
-    <div class="stream-form">
-        <div class="field-row">
+    <!-- Server warnings -->
+    <div id="warn-area"></div>
+
+    <!-- Server setup -->
+    <div class="platform" id="card-server">
+        <div class="p-head">
+            <div class="p-name"><span class="p-dot off" id="dot-server"></span>Your Server</div>
+            <span class="p-badge unconfigured" id="badge-server">not set up</span>
+        </div>
+        <div class="p-fields">
+            <span class="p-label">Server IP</span>
+            <input class="p-input" type="text" id="inp-server-ip" placeholder="e.g. 123.45.67.89" autocomplete="off">
+            <div class="p-actions">
+                <button class="sm" onclick="saveServer()">Save</button>
+            </div>
+        </div>
+        <div id="obs-area" style="margin-top: 10px; display: none;">
+            <div style="font-size: 12px; color: #a09a92; margin-bottom: 4px;">Point OBS here (click to copy)</div>
+            <div class="obs-row">
+                <span class="obs-k">Server</span>
+                <span class="obs-v" id="obs-server" onclick="copyText(this)"></span>
+            </div>
+            <div class="obs-row">
+                <span class="obs-k">Key</span>
+                <span class="obs-v" onclick="copyText(this)">livestream</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Twitch -->
+    <div id="card-twitch" class="platform">
+        <div class="p-head">
+            <div class="p-name"><span class="p-dot off" id="dot-twitch"></span>Twitch</div>
+            <span class="p-badge unconfigured" id="badge-twitch">not set up</span>
+        </div>
+        <div class="p-fields">
+            <span class="p-label">Stream key</span>
+            <input class="p-input" type="password" id="key-twitch" placeholder="From twitch.tv/dashboard/settings" autocomplete="off">
+            <div class="p-actions">
+                <button class="sm" onclick="saveKey('twitch')">Save key</button>
+                <button class="sm" onclick="toggleVis('key-twitch')">Show</button>
+            </div>
+        </div>
+        <div class="adv-toggle" style="margin-top:10px;" onclick="toggleSection('twitch-api')">
+            <span id="arrow-twitch-api">&#9654;</span> API access (for title/game updates)
+        </div>
+        <div id="twitch-api" class="adv-panel">
+            <div class="p-fields" style="margin-top:6px;">
+                <span class="p-label">Client ID</span>
+                <input class="p-input" type="text" id="twitch-client-id" placeholder="From dev.twitch.tv/console" autocomplete="off">
+                <span class="p-label">Client secret</span>
+                <input class="p-input" type="password" id="twitch-client-secret" placeholder="" autocomplete="off">
+                <span class="p-label">Broadcaster ID</span>
+                <input class="p-input" type="text" id="twitch-broadcaster-id" placeholder="Your Twitch user ID" autocomplete="off">
+                <div class="p-actions">
+                    <button class="sm" onclick="saveTwitchApi()">Save API credentials</button>
+                    <button class="sm" onclick="toggleVis('twitch-client-secret')">Show secret</button>
+                </div>
+            </div>
+            <div style="font-size:11px; color:#a09a92; margin-top:6px;">
+                Get these at <a href="https://dev.twitch.tv/console/apps" target="_blank" style="color:#6b655e;">dev.twitch.tv/console</a>.
+                Then run <code style="font-size:11px; background:#f5f3f0; padding:1px 4px; border-radius:2px;">bash scripts/auth-setup.sh twitch</code> to get your tokens.
+            </div>
+        </div>
+    </div>
+
+    <!-- Kick -->
+    <div id="card-kick" class="platform">
+        <div class="p-head">
+            <div class="p-name"><span class="p-dot off" id="dot-kick"></span>Kick</div>
+            <span class="p-badge unconfigured" id="badge-kick">not set up</span>
+        </div>
+        <div class="p-fields">
+            <span class="p-label">Stream key</span>
+            <input class="p-input" type="password" id="key-kick" placeholder="From kick.com/dashboard/settings" autocomplete="off">
+            <div class="p-actions">
+                <button class="sm" onclick="saveKey('kick')">Save key</button>
+                <button class="sm" onclick="toggleVis('key-kick')">Show</button>
+            </div>
+        </div>
+        <div class="adv-toggle" style="margin-top:10px;" onclick="toggleSection('kick-api')">
+            <span id="arrow-kick-api">&#9654;</span> API access (for title/game updates)
+        </div>
+        <div id="kick-api" class="adv-panel">
+            <div class="p-fields" style="margin-top:6px;">
+                <span class="p-label">Client ID</span>
+                <input class="p-input" type="text" id="kick-client-id" placeholder="From dev.kick.com" autocomplete="off">
+                <span class="p-label">Client secret</span>
+                <input class="p-input" type="password" id="kick-client-secret" placeholder="" autocomplete="off">
+                <div class="p-actions">
+                    <button class="sm" onclick="saveKickApi()">Save API credentials</button>
+                    <button class="sm" onclick="toggleVis('kick-client-secret')">Show secret</button>
+                </div>
+            </div>
+            <div style="font-size:11px; color:#a09a92; margin-top:6px;">
+                Get these at <a href="https://dev.kick.com" target="_blank" style="color:#6b655e;">dev.kick.com</a>.
+                Then run <code style="font-size:11px; background:#f5f3f0; padding:1px 4px; border-radius:2px;">bash scripts/auth-setup.sh kick</code> to get your tokens.
+            </div>
+        </div>
+    </div>
+
+    <!-- Rumble -->
+    <div id="card-rumble" class="platform">
+        <div class="p-head">
+            <div class="p-name"><span class="p-dot off" id="dot-rumble"></span>Rumble</div>
+            <span class="p-badge unconfigured" id="badge-rumble">not set up</span>
+        </div>
+        <div class="p-fields">
+            <span class="p-label">RTMP URL</span>
+            <input class="p-input" type="text" id="url-rumble" placeholder="rtmp://live-east.rumble.com/live/" autocomplete="off">
+            <span class="p-label">Stream key</span>
+            <input class="p-input" type="password" id="key-rumble" placeholder="From Rumble Studio" autocomplete="off">
+            <div class="p-actions">
+                <button class="sm" onclick="saveKey('rumble')">Save</button>
+                <button class="sm" onclick="toggleVis('key-rumble')">Show key</button>
+            </div>
+        </div>
+        <div style="font-size:11px; color:#a09a92; margin-top:8px;">
+            Get your RTMP URL and key from Rumble Studio > Live Stream settings.
+        </div>
+    </div>
+
+    <!-- X -->
+    <div id="card-x" class="platform">
+        <div class="p-head">
+            <div class="p-name"><span class="p-dot off" id="dot-x"></span>X</div>
+            <span class="p-badge unconfigured" id="badge-x">not set up</span>
+        </div>
+        <div class="p-fields">
+            <span class="p-label">RTMP URL</span>
+            <input class="p-input" type="text" id="url-x" placeholder="From X Media Studio > Producer" autocomplete="off">
+            <span class="p-label">Stream key</span>
+            <input class="p-input" type="password" id="key-x" placeholder="From X Media Studio > Producer" autocomplete="off">
+            <div class="p-actions">
+                <button class="sm" onclick="saveKey('x')">Save</button>
+                <button class="sm" onclick="toggleVis('key-x')">Show key</button>
+            </div>
+        </div>
+        <div style="font-size:11px; color:#a09a92; margin-top:8px;">
+            Requires X Premium. Get RTMP details from Media Studio > Producer > Sources.
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Stream info -->
+    <div class="stream-section">
+        <div class="s-head">Stream title & game</div>
+        <div class="s-fields">
             <input type="text" id="title" placeholder="Stream title">
             <input type="text" id="game" placeholder="Game or category">
         </div>
-        <div class="target-row">
+        <div class="s-targets" id="target-row">
             <label><input type="checkbox" id="tgt-twitch" checked> Twitch</label>
             <label><input type="checkbox" id="tgt-kick" checked> Kick</label>
         </div>
@@ -250,18 +554,26 @@ hr {
 
     <hr>
 
-    <div class="server-btns">
-        <button onclick="act('deploy')">Deploy</button>
-        <button onclick="act('restart')">Restart</button>
-        <button onclick="toggleLogs()">Logs</button>
+    <!-- Server controls -->
+    <div class="adv-toggle" onclick="toggleAdv()">
+        <span id="adv-arrow">&#9654;</span> Server controls
     </div>
-    <div id="log-wrap" style="display:none;">
-        <div id="log" class="log-box"></div>
+    <div id="adv-panel" class="adv-panel">
+        <div class="adv-btns">
+            <button onclick="act('deploy')">Deploy configs</button>
+            <button onclick="act('restart')">Restart</button>
+            <button onclick="toggleLogs()">Logs</button>
+        </div>
+        <div id="log-wrap" style="display:none;">
+            <div id="log" class="log-box"></div>
+        </div>
     </div>
 
 </div>
 
 <script>
+let serverIp = '';
+
 async function api(m, p, b) {
     try {
         const r = await fetch('/api/'+p, {method:m, headers:{'Content-Type':'application/json'}, body:b?JSON.stringify(b):undefined});
@@ -277,51 +589,243 @@ function toast(msg) {
     setTimeout(() => t.remove(), 2200);
 }
 
-// Status
-async function refresh() {
-    const el = document.getElementById('platforms');
-    const obs = document.getElementById('obs-url');
+function copyText(el) {
+    navigator.clipboard.writeText(el.textContent).then(() => toast('Copied'));
+}
 
+function toggleVis(id) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+}
+
+// ── Save server IP ──
+
+async function saveServer() {
+    const ip = document.getElementById('inp-server-ip').value.trim();
+    if (!ip) { toast('Enter your server IP'); return; }
+    const d = await api('POST', 'save-env', { key: 'SERVER_IP', value: ip });
+    if (d.ok) { toast('Server IP saved'); refresh(); }
+    else { toast('Failed to save'); }
+}
+
+// ── Save API credentials ──
+
+async function saveTwitchApi() {
+    const cid = document.getElementById('twitch-client-id').value.trim();
+    const cs = document.getElementById('twitch-client-secret').value.trim();
+    const bid = document.getElementById('twitch-broadcaster-id').value.trim();
+    if (!cid || !cs) { toast('Enter client ID and secret'); return; }
+    const saves = [
+        api('POST', 'save-env', { key: 'TWITCH_CLIENT_ID', value: cid }),
+        api('POST', 'save-env', { key: 'TWITCH_CLIENT_SECRET', value: cs }),
+    ];
+    if (bid) saves.push(api('POST', 'save-env', { key: 'TWITCH_BROADCASTER_ID', value: bid }));
+    await Promise.all(saves);
+    toast('Twitch API credentials saved. Run auth-setup.sh to get tokens.');
+    refresh();
+}
+
+async function saveKickApi() {
+    const cid = document.getElementById('kick-client-id').value.trim();
+    const cs = document.getElementById('kick-client-secret').value.trim();
+    if (!cid || !cs) { toast('Enter client ID and secret'); return; }
+    await Promise.all([
+        api('POST', 'save-env', { key: 'KICK_CLIENT_ID', value: cid }),
+        api('POST', 'save-env', { key: 'KICK_CLIENT_SECRET', value: cs }),
+    ]);
+    toast('Kick API credentials saved. Run auth-setup.sh to get tokens.');
+    refresh();
+}
+
+function toggleSection(id) {
+    const el = document.getElementById(id);
+    const arrow = document.getElementById('arrow-' + id);
+    const open = el.classList.toggle('open');
+    arrow.innerHTML = open ? '&#9660;' : '&#9654;';
+}
+
+// ── Save stream keys ──
+
+async function saveKey(platform) {
+    let body = {};
+    if (platform === 'twitch') {
+        body.key = 'TWITCH_STREAM_KEY';
+        body.value = document.getElementById('key-twitch').value.trim();
+    } else if (platform === 'kick') {
+        body.key = 'KICK_STREAM_KEY';
+        body.value = document.getElementById('key-kick').value.trim();
+    } else if (platform === 'rumble') {
+        const url = document.getElementById('url-rumble').value.trim();
+        const key = document.getElementById('key-rumble').value.trim();
+        if (url) await api('POST', 'save-env', { key: 'RUMBLE_RTMP_URL', value: url });
+        if (key) {
+            body.key = 'RUMBLE_STREAM_KEY';
+            body.value = key;
+        } else {
+            toast('Enter a stream key');
+            return;
+        }
+    } else if (platform === 'x') {
+        const url = document.getElementById('url-x').value.trim();
+        const key = document.getElementById('key-x').value.trim();
+        if (url) await api('POST', 'save-env', { key: 'X_RTMP_URL', value: url });
+        if (key) {
+            body.key = 'X_STREAM_KEY';
+            body.value = key;
+        } else {
+            toast('Enter a stream key');
+            return;
+        }
+    }
+
+    if (!body.value) { toast('Enter a key first'); return; }
+
+    const d = await api('POST', 'save-env', body);
+    if (d.ok) {
+        toast(platform.charAt(0).toUpperCase() + platform.slice(1) + ' key saved');
+        refresh();
+    } else {
+        toast('Failed to save');
+    }
+}
+
+// ── Status refresh ──
+
+async function refresh() {
     const [status, config] = await Promise.all([
         api('GET', 'status'),
         api('GET', 'config')
     ]);
 
-    // OBS connection string
-    if (config.server_ip)
-        obs.textContent = 'rtmp://' + config.server_ip + '/live  key: livestream';
-    else
-        obs.textContent = 'Set SERVER_IP in .env';
+    serverIp = config.server_ip || '';
 
-    if (!status.ok) {
-        el.innerHTML = platform('Server', false);
-        return;
+    // Server card
+    const serverDot = document.getElementById('dot-server');
+    const serverBadge = document.getElementById('badge-server');
+    const obsArea = document.getElementById('obs-area');
+    const ipInput = document.getElementById('inp-server-ip');
+
+    serverDot.className = 'p-dot';
+    serverBadge.className = 'p-badge';
+
+    if (serverIp) {
+        if (!ipInput.value && !document.activeElement?.id?.includes('server')) {
+            ipInput.value = serverIp;
+        }
+        obsArea.style.display = 'block';
+        document.getElementById('obs-server').textContent = 'rtmp://' + serverIp + '/live';
+
+        if (status.ok && status.srs_online) {
+            serverDot.classList.add('on');
+            serverBadge.classList.add('ready');
+            serverBadge.textContent = 'connected';
+        } else {
+            serverDot.classList.add('off');
+            serverBadge.classList.add('offline');
+            serverBadge.textContent = 'unreachable';
+        }
+    } else {
+        obsArea.style.display = 'none';
+        serverDot.classList.add('off');
+        serverBadge.classList.add('unconfigured');
+        serverBadge.textContent = 'not set up';
     }
 
-    let html = '';
-    const isLive = (status.streams || []).length > 0;
+    const isLive = status.ok && (status.streams || []).length > 0;
+    const containers = status.ok ? (status.containers || {}) : {};
 
-    // Show each container as a platform
-    const containers = status.containers || {};
-    for (const [name, st] of Object.entries(containers)) {
-        const short = name.replace('multistream-', '');
-        const up = st.toLowerCase().includes('up');
-        html += platform(short, up, isLive && up);
+    // Twitch card
+    updateCard('twitch', {
+        hasKey: config.has_twitch_key,
+        hasApi: config.has_twitch_api,
+        running: (containers['multistream-twitch'] || '').toLowerCase().includes('up'),
+        isLive
+    });
+
+    // Kick card
+    updateCard('kick', {
+        hasKey: config.has_kick_key,
+        hasApi: config.has_kick_api,
+        running: (containers['multistream-kick'] || '').toLowerCase().includes('up'),
+        isLive
+    });
+
+    // Rumble card
+    updateCard('rumble', {
+        hasKey: config.has_rumble_key,
+        hasApi: false,
+        running: (containers['multistream-rumble'] || '').toLowerCase().includes('up'),
+        isLive
+    });
+
+    // X card
+    updateCard('x', {
+        hasKey: config.has_x_key,
+        hasApi: false,
+        running: (containers['multistream-x'] || '').toLowerCase().includes('up'),
+        isLive
+    });
+
+    // Live banner
+    const banner = document.getElementById('live-banner');
+    const liveText = document.getElementById('live-text');
+    if (isLive) {
+        const names = [];
+        if ((containers['multistream-twitch'] || '').toLowerCase().includes('up')) names.push('Twitch');
+        if ((containers['multistream-kick'] || '').toLowerCase().includes('up')) names.push('Kick');
+        if ((containers['multistream-rumble'] || '').toLowerCase().includes('up')) names.push('Rumble');
+        if ((containers['multistream-x'] || '').toLowerCase().includes('up')) names.push('X');
+        banner.classList.add('active');
+        liveText.textContent = 'Live on ' + (names.length ? names.join(' + ') : 'server');
+    } else {
+        banner.classList.remove('active');
     }
 
-    // Show SRS and stunnel
-    html += platform('srs', status.srs_online, isLive && status.srs_online);
-    html += platform('stunnel', status.stunnel === 'active');
-
-    el.innerHTML = html;
+    // Server warnings
+    const warnArea = document.getElementById('warn-area');
+    if (status.ok) {
+        const warnings = [];
+        if (!status.srs_online) warnings.push('Stream server (SRS) is not responding');
+        if (status.stunnel !== 'active') warnings.push('TLS proxy is down — Kick may not connect');
+        warnArea.innerHTML = warnings.map(w => `<div class="warn-bar">${w}</div>`).join('');
+    } else if (serverIp) {
+        warnArea.innerHTML = '<div class="warn-bar">Cannot reach server at ' + serverIp + '</div>';
+    } else {
+        warnArea.innerHTML = '';
+    }
 }
 
-function platform(name, ok, live) {
-    const cls = live ? 'dot-live' : (ok ? 'dot-on' : 'dot-off');
-    return `<div class="platform"><span class="dot ${cls}"></span>${name}</div>`;
+function updateCard(name, st) {
+    const card = document.getElementById('card-' + name);
+    const dot = document.getElementById('dot-' + name);
+    const badge = document.getElementById('badge-' + name);
+
+    card.className = 'platform';
+    dot.className = 'p-dot';
+    badge.className = 'p-badge';
+
+    if (!st.hasKey) {
+        dot.classList.add('off');
+        badge.classList.add('unconfigured');
+        badge.textContent = 'not set up';
+    } else if (st.isLive && st.running) {
+        card.classList.add('live');
+        dot.classList.add('live');
+        badge.classList.add('streaming');
+        badge.textContent = 'streaming';
+    } else if (st.running) {
+        dot.classList.add('on');
+        badge.classList.add('ready');
+        badge.textContent = st.hasApi ? 'ready (API)' : 'ready';
+    } else {
+        dot.classList.add('off');
+        badge.classList.add('offline');
+        badge.textContent = 'offline';
+    }
 }
 
-// Set stream info
+// ── Stream info ──
+
 async function go(mode) {
     const title = document.getElementById('title').value.trim();
     const game = document.getElementById('game').value.trim();
@@ -346,17 +850,18 @@ async function go(mode) {
     });
 
     if (d.ok) {
-        const r = d.results;
         const parts = [];
-        if (r.twitch) parts.push(`<span class="${r.twitch === 'updated' ? 'ok' : 'fail'}">Twitch: ${r.twitch}</span>`);
-        if (r.kick) parts.push(`<span class="${r.kick === 'updated' ? 'ok' : 'fail'}">Kick: ${r.kick}</span>`);
+        for (const [p, result] of Object.entries(d.results)) {
+            parts.push(`<span class="${result === 'updated' ? 'ok' : 'fail'}">${p}: ${result}</span>`);
+        }
         el.innerHTML = parts.join(' &middot; ');
     } else {
         el.innerHTML = `<span class="fail">${d.error || 'Failed'}</span>`;
     }
 }
 
-// Server actions
+// ── Server controls ──
+
 async function act(cmd) {
     toast(cmd.charAt(0).toUpperCase() + cmd.slice(1) + 'ing...');
     const d = await api('POST', cmd);
@@ -364,7 +869,13 @@ async function act(cmd) {
     setTimeout(refresh, 2500);
 }
 
-// Logs
+function toggleAdv() {
+    const p = document.getElementById('adv-panel');
+    const a = document.getElementById('adv-arrow');
+    const open = p.classList.toggle('open');
+    a.innerHTML = open ? '&#9660;' : '&#9654;';
+}
+
 let logsOpen = false;
 function toggleLogs() {
     const w = document.getElementById('log-wrap');
@@ -381,7 +892,6 @@ async function loadLogs() {
     el.scrollTop = el.scrollHeight;
 }
 
-// Enter key submits
 document.getElementById('title').onkeydown = e => { if (e.key === 'Enter') go('both'); };
 document.getElementById('game').onkeydown = e => { if (e.key === 'Enter') go('both'); };
 
