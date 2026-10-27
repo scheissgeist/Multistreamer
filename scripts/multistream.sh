@@ -86,9 +86,22 @@ cmd_restart() {
 cmd_deploy() {
     echo "Deploying configs to server..."
 
+    # The ingest stream name is the only thing stopping strangers from
+    # publishing through the relay, so it should be a long random value.
+    local ingest_key="${INGEST_STREAM_KEY:-livestream}"
+    if [[ ! "$ingest_key" =~ ^[A-Za-z0-9_-]+$ ]]; then
+        echo "INGEST_STREAM_KEY may only contain letters, digits, _ and -"
+        exit 1
+    fi
+    if [ "$ingest_key" = "livestream" ]; then
+        echo "WARNING: INGEST_STREAM_KEY is unset, using the public default 'livestream'."
+        echo "         Anyone who knows your server IP can push video to your channels."
+        echo "         Set INGEST_STREAM_KEY in .env (e.g. openssl rand -hex 24) and use it as the OBS stream key."
+    fi
+
     # Substitute stream keys into docker-compose.yml
     local temp=$(mktemp)
-    sed "s|TWITCH_STREAM_KEY|$TWITCH_STREAM_KEY|g; s|KICK_STREAM_KEY|$KICK_STREAM_KEY|g" \
+    sed "s|INGEST_STREAM_KEY|$ingest_key|g; s|TWITCH_STREAM_KEY|$TWITCH_STREAM_KEY|g; s|KICK_STREAM_KEY|$KICK_STREAM_KEY|g" \
         "$SCRIPT_DIR/../config/docker-compose.yml" > "$temp"
     scp "$temp" "root@$SERVER_IP:/opt/multistream/docker-compose.yml"
     rm "$temp"

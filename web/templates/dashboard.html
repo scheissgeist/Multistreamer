@@ -546,7 +546,7 @@ async function refreshConfig() {
     area.innerHTML = html;
 
     if (data.server_ip) {
-        obs.innerHTML = `<div class="obs-hint">OBS &rarr; rtmp://${data.server_ip}/live &middot; Key: livestream</div>`;
+        obs.innerHTML = `<div class="obs-hint">OBS &rarr; rtmp://${data.server_ip}/live &middot; Key: INGEST_STREAM_KEY from .env</div>`;
     } else {
         obs.innerHTML = '';
     }

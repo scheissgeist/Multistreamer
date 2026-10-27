@@ -3,6 +3,7 @@
 
 import json
 import os
+import re
 import subprocess
 import urllib.parse
 import urllib.request
@@ -249,6 +250,10 @@ def api_deploy():
 
     # Build docker-compose with keys substituted
     compose_src = (config_dir / "docker-compose.yml").read_text()
+    ingest_key = env.get("INGEST_STREAM_KEY") or "livestream"
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", ingest_key):
+        return jsonify({"ok": False, "output": "INGEST_STREAM_KEY may only contain letters, digits, _ and -"})
+    compose_src = compose_src.replace("INGEST_STREAM_KEY", ingest_key)
     compose_src = compose_src.replace("TWITCH_STREAM_KEY", twitch_key)
     compose_src = compose_src.replace("KICK_STREAM_KEY", kick_key)
 

@@ -48,6 +48,7 @@ Fill in your `.env`:
 - `SERVER_IP` — your VPS IP
 - `TWITCH_STREAM_KEY` — from twitch.tv/dashboard/settings
 - `KICK_STREAM_KEY` — from kick.com/dashboard/settings
+- `INGEST_STREAM_KEY` — the key OBS uses to publish to your relay. Generate one with `openssl rand -hex 24`. If left empty it falls back to `livestream`, which anyone can guess.
 
 ### 3. Deploy
 
@@ -62,7 +63,7 @@ This substitutes your stream keys into the docker-compose config, uploads everyt
 ```
 Service: Custom
 Server:  rtmp://YOUR_SERVER_IP/live
-Key:     livestream
+Key:     <your INGEST_STREAM_KEY>
 ```
 
 Hit Start Streaming. Both platforms go live.
@@ -173,9 +174,9 @@ Add a service block like this:
     network_mode: host
     command: >
       -hide_banner -loglevel warning
-      -i rtmp://127.0.0.1:1935/live/livestream
+      -i rtmp://127.0.0.1:1935/live/INGEST_STREAM_KEY
       -c copy -f flv
-      rtmp://a.rtmp.youtube.com/live2/YOUR_STREAM_KEY
+      rtmp://a.rtmp.youtube.com/live2/YOUTUBE_STREAM_KEY
 ```
 
 Then add the stream key to `.env`, add a `sed` substitution in the deploy function, and redeploy.
